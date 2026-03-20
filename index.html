@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Protocolo Definição | 2.200 kcal</title>
+<title>Protocolo Definição | 2.500 kcal</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -19,6 +19,9 @@
   --muted: #5a6a7a;
   --gold: #f5c842;
   --red: #ff4d5a;
+  --blue: #4da6ff;
+  --green: #4dff91;
+  --orange: #ff8c4d;
 }
 
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
@@ -31,7 +34,6 @@ body {
   overflow-x: hidden;
 }
 
-/* GRID NOISE BG */
 body::before {
   content:'';
   position:fixed; inset:0;
@@ -45,7 +47,6 @@ body::before {
 
 .page { position:relative; z-index:1; max-width:1160px; margin:0 auto; padding:40px 24px 80px; }
 
-/* HEADER */
 header {
   padding: 60px 0 50px;
   border-bottom: 1px solid var(--border);
@@ -60,8 +61,6 @@ header {
   gap: 24px;
   flex-wrap: wrap;
 }
-
-.logo-area {}
 
 .eyebrow {
   font-family: 'DM Mono', monospace;
@@ -104,10 +103,90 @@ h1 .highlight { color: var(--acid); }
 
 .stat-pill strong { color: var(--acid); font-weight: 500; }
 
-/* PROGRESS BAR */
-.progress-section {
-  margin-bottom: 52px;
+/* MACROS TOTALS BAR */
+.macro-totals {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 36px;
 }
+
+.macro-total-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 18px;
+  position: relative;
+  overflow: hidden;
+}
+
+.macro-total-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+}
+
+.macro-total-card.kcal::before { background: var(--acid); }
+.macro-total-card.prot::before { background: var(--blue); }
+.macro-total-card.carb::before { background: var(--orange); }
+.macro-total-card.fat::before  { background: var(--green); }
+
+.macro-total-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.macro-total-value {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.2rem;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.macro-total-card.kcal .macro-total-value { color: var(--acid); }
+.macro-total-card.prot .macro-total-value { color: var(--blue); }
+.macro-total-card.carb .macro-total-value { color: var(--orange); }
+.macro-total-card.fat  .macro-total-value { color: var(--green); }
+
+.macro-total-unit {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+}
+
+/* MACRO PILL em cada card */
+.macro-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.macro-pill {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  padding: 3px 9px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 500;
+}
+
+.macro-pill.kcal { background: rgba(212,255,0,0.1);  color: var(--acid);   border: 1px solid rgba(212,255,0,0.25); }
+.macro-pill.prot { background: rgba(77,166,255,0.1); color: var(--blue);   border: 1px solid rgba(77,166,255,0.25); }
+.macro-pill.carb { background: rgba(255,140,77,0.1); color: var(--orange); border: 1px solid rgba(255,140,77,0.25); }
+.macro-pill.fat  { background: rgba(77,255,145,0.1); color: var(--green);  border: 1px solid rgba(77,255,145,0.25); }
+
+.macro-pill span { opacity: 0.6; font-size: 9px; }
+
+/* PROGRESS BAR */
+.progress-section { margin-bottom: 52px; }
 
 .prog-header {
   display: flex;
@@ -154,7 +233,6 @@ h1 .highlight { color: var(--acid); }
   margin-bottom: 32px;
 }
 
-/* MEAL CARD */
 .meal-card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -168,7 +246,6 @@ h1 .highlight { color: var(--acid); }
 
 .meal-card:hover { border-color: var(--border-bright); transform: translateY(-2px); }
 .meal-card.done { opacity: 0.42; }
-.meal-card.done .card-body { text-decoration: none; }
 
 .card-stripe {
   height: 3px;
@@ -225,7 +302,7 @@ h1 .highlight { color: var(--acid); }
   font-size: 1.6rem;
   letter-spacing: 0.04em;
   color: var(--text);
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   line-height: 1;
 }
 
@@ -290,7 +367,6 @@ h1 .highlight { color: var(--acid); }
 
 .tip-icon { flex-shrink: 0; font-size: 13px; }
 
-/* SECTION LABEL */
 .section-label {
   font-family: 'DM Mono', monospace;
   font-size: 10px;
@@ -402,7 +478,6 @@ h1 .highlight { color: var(--acid); }
 
 .alert-icon { font-size: 14px; flex-shrink:0; padding-top: 1px; }
 
-/* CONGRATS */
 .congrats-bar {
   text-align: center;
   padding: 16px;
@@ -417,7 +492,6 @@ h1 .highlight { color: var(--acid); }
   display: none;
 }
 
-/* RESET */
 .reset-row { margin-top: 24px; text-align: right; }
 .reset-btn {
   font-family: 'DM Mono', monospace;
@@ -434,10 +508,8 @@ h1 .highlight { color: var(--acid); }
 }
 .reset-btn:hover { border-color: var(--red); color: var(--red); }
 
-/* overflow for table */
 .table-scroll { overflow-x: auto; }
 
-/* ANIMATIONS */
 @keyframes fadeUp {
   from { opacity:0; transform:translateY(16px); }
   to   { opacity:1; transform:translateY(0); }
@@ -448,7 +520,11 @@ h1 .highlight { color: var(--acid); }
 .meal-card:nth-child(2) { animation-delay: 0.12s; }
 .meal-card:nth-child(3) { animation-delay: 0.19s; }
 .meal-card:nth-child(4) { animation-delay: 0.26s; }
+.meal-card:nth-child(5) { animation-delay: 0.33s; }
 
+@media(max-width:600px){
+  .macro-totals { grid-template-columns: repeat(2,1fr); }
+}
 </style>
 </head>
 <body>
@@ -457,16 +533,40 @@ h1 .highlight { color: var(--acid); }
 <header>
   <div class="header-top">
     <div class="logo-area">
-      <p class="eyebrow">Protocolo de Definição · 2025</p>
-      <h1>DEFINIÇÃO<br><span class="highlight">2.200 KCAL</span></h1>
+      <p class="eyebrow">Protocolo de Definição · 2025 — Déficit Leve</p>
+      <h1>DEFINIÇÃO<br><span class="highlight">2.500 KCAL</span></h1>
     </div>
     <div class="header-stats">
       <div class="stat-pill">Gasto estimado <strong>2.700 kcal</strong></div>
-      <div class="stat-pill">Déficit <strong>−500 kcal/dia</strong></div>
+      <div class="stat-pill">Déficit <strong>−200 kcal/dia</strong></div>
       <div class="stat-pill">Foco <strong>Preservação muscular</strong></div>
     </div>
   </div>
 </header>
+
+<!-- MACRO TOTALS -->
+<div class="macro-totals">
+  <div class="macro-total-card kcal">
+    <div class="macro-total-label">Calorias totais</div>
+    <div class="macro-total-value">2.490</div>
+    <div class="macro-total-unit">kcal / dia</div>
+  </div>
+  <div class="macro-total-card prot">
+    <div class="macro-total-label">Proteína</div>
+    <div class="macro-total-value">178g</div>
+    <div class="macro-total-unit">~29% das calorias</div>
+  </div>
+  <div class="macro-total-card carb">
+    <div class="macro-total-label">Carboidratos</div>
+    <div class="macro-total-value">275g</div>
+    <div class="macro-total-unit">~44% das calorias</div>
+  </div>
+  <div class="macro-total-card fat">
+    <div class="macro-total-label">Gordura</div>
+    <div class="macro-total-value">67g</div>
+    <div class="macro-total-unit">~27% das calorias</div>
+  </div>
+</div>
 
 <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:36px;">
   <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;">
@@ -494,7 +594,7 @@ h1 .highlight { color: var(--acid); }
 <div class="progress-section">
   <div class="prog-header">
     <span class="prog-label">Refeições do dia</span>
-    <span class="prog-count" id="prog-count">0 / 4</span>
+    <span class="prog-count" id="prog-count">0 / 5</span>
   </div>
   <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
 </div>
@@ -503,6 +603,7 @@ h1 .highlight { color: var(--acid); }
 
 <div class="meals-grid" id="meals-grid">
 
+  <!-- R1: Café -->
   <div class="meal-card" id="card-1" onclick="toggle(1)">
     <div class="card-stripe"></div>
     <div class="card-head">
@@ -516,24 +617,32 @@ h1 .highlight { color: var(--acid); }
     <div class="card-body">
       <span class="meal-icon">🥞</span>
       <div class="meal-title">Panqueca de Hotel</div>
+      <div class="macro-row">
+        <div class="macro-pill kcal">530 <span>kcal</span></div>
+        <div class="macro-pill prot">28g <span>prot</span></div>
+        <div class="macro-pill carb">55g <span>carb</span></div>
+        <div class="macro-pill fat">19g <span>gord</span></div>
+      </div>
       <ul class="ingredients-list">
         <li>3 Ovos inteiros</li>
-        <li>4 col. (sopa) de Aveia</li>
-        <li>1 Banana amassada</li>
+        <li>4 col. (sopa) de Aveia em flocos (40g)</li>
+        <li>1 Banana amassada (100g)</li>
+        <li>1 col. (sopa) de Pasta de amendoim (20g) <em style="color:var(--acid);font-size:11px;">★ novo</em></li>
         <li>Canela em pó a gosto</li>
       </ul>
       <div class="instruction-box">
         <div class="ins-label">Preparo</div>
-        <p>Bata tudo com um garfo e jogue na frigideira em fogo baixo. Doure os dois lados.</p>
+        <p>Bata tudo com um garfo e jogue na frigideira em fogo baixo. Doure os dois lados. Sirva com a pasta de amendoim por cima.</p>
       </div>
-      <div class="tip"><span class="tip-icon">💡</span>1 colher de doce de leite por cima muda o jogo!</div>
+      <div class="tip"><span class="tip-icon">💡</span>A pasta de amendoim adiciona gordura boa e deixa mais saciante até o almoço.</div>
     </div>
   </div>
 
+  <!-- R2: Almoço -->
   <div class="meal-card" id="card-2" onclick="toggle(2)">
     <div class="card-stripe"></div>
     <div class="card-head">
-      <span class="time-badge">12:00 & 23:00</span>
+      <span class="time-badge">12:00</span>
       <div class="check-circle">
         <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
           <polyline points="1,4.5 4,7.5 10,1" stroke="#080a0d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -543,19 +652,26 @@ h1 .highlight { color: var(--acid); }
     <div class="card-body">
       <span class="meal-icon">🍲</span>
       <div class="meal-title">Arroz & Frango</div>
+      <div class="macro-row">
+        <div class="macro-pill kcal">600 <span>kcal</span></div>
+        <div class="macro-pill prot">52g <span>prot</span></div>
+        <div class="macro-pill carb">74g <span>carb</span></div>
+        <div class="macro-pill fat">10g <span>gord</span></div>
+      </div>
       <ul class="ingredients-list">
-        <li>200g Arroz cozido (com cúrcuma)</li>
-        <li>150g Frango em cubos (com shoyu)</li>
+        <li>250g Arroz cozido (com cúrcuma) <em style="color:var(--acid);font-size:11px;">★ +50g</em></li>
+        <li>180g Frango em cubos (com shoyu) <em style="color:var(--acid);font-size:11px;">★ +30g</em></li>
         <li>Cenoura ralada (opcional)</li>
       </ul>
       <div class="instruction-box">
         <div class="ins-label">Preparo</div>
-        <p>Sele o frango em fogo alto para ficar suculento. Use cúrcuma no arroz para dar cor.</p>
+        <p>Sele o frango em fogo alto para ficar suculento. Use cúrcuma no arroz para dar cor e ação anti-inflamatória.</p>
       </div>
       <div class="tip"><span class="tip-icon">💡</span>Finalize com cebolinha picada congelada.</div>
     </div>
   </div>
 
+  <!-- R3: Lanche -->
   <div class="meal-card" id="card-3" onclick="toggle(3)">
     <div class="card-stripe"></div>
     <div class="card-head">
@@ -569,19 +685,27 @@ h1 .highlight { color: var(--acid); }
     <div class="card-body">
       <span class="meal-icon">🥪</span>
       <div class="meal-title">Sanduíche Cremoso</div>
+      <div class="macro-row">
+        <div class="macro-pill kcal">390 <span>kcal</span></div>
+        <div class="macro-pill prot">38g <span>prot</span></div>
+        <div class="macro-pill carb">32g <span>carb</span></div>
+        <div class="macro-pill fat">12g <span>gord</span></div>
+      </div>
       <ul class="ingredients-list">
-        <li>2 fatias de Pão integral</li>
+        <li>2 fatias de Pão integral (50g)</li>
         <li>100g Frango desfiado</li>
         <li>1 col. de Requeijão ou caldo do cozimento</li>
+        <li>1 Ovo cozido inteiro <em style="color:var(--acid);font-size:11px;">★ novo</em></li>
       </ul>
       <div class="instruction-box">
         <div class="ins-label">Preparo</div>
-        <p>Misture o frango com o requeijão e temperos (orégano/páprica). Recheie o pão.</p>
+        <p>Misture o frango com o requeijão e temperos (orégano/páprica). Recheie o pão. Sirva com o ovo cozido ao lado.</p>
       </div>
       <div class="tip"><span class="tip-icon">💡</span>Toste na sanduicheira para ficar crocante!</div>
     </div>
   </div>
 
+  <!-- R4: Jantar -->
   <div class="meal-card" id="card-4" onclick="toggle(4)">
     <div class="card-stripe"></div>
     <div class="card-head">
@@ -595,17 +719,57 @@ h1 .highlight { color: var(--acid); }
     <div class="card-body">
       <span class="meal-icon">🍳</span>
       <div class="meal-title">Omelete de Pizza</div>
+      <div class="macro-row">
+        <div class="macro-pill kcal">370 <span>kcal</span></div>
+        <div class="macro-pill prot">26g <span>prot</span></div>
+        <div class="macro-pill carb">30g <span>carb</span></div>
+        <div class="macro-pill fat">16g <span>gord</span></div>
+      </div>
       <ul class="ingredients-list">
         <li>2 Ovos inteiros</li>
-        <li>1 fatia de Queijo muçarela</li>
+        <li>1 fatia de Queijo muçarela (25g)</li>
         <li>Orégano à vontade</li>
+        <li>2 fatias de Pão integral <em style="color:var(--acid);font-size:11px;">★ novo</em></li>
         <li>1 Banana ou Maçã</li>
       </ul>
       <div class="instruction-box">
         <div class="ins-label">Preparo</div>
-        <p>Bata os ovos, jogue na frigideira e finalize com queijo e muito orégano.</p>
+        <p>Bata os ovos, jogue na frigideira e finalize com queijo e muito orégano. Sirva com as fatias de pão integral.</p>
       </div>
       <div class="tip"><span class="tip-icon">💡</span>O cheiro do orégano ajuda a não furar a dieta.</div>
+    </div>
+  </div>
+
+  <!-- R5: Ceia -->
+  <div class="meal-card" id="card-5" onclick="toggle(5)">
+    <div class="card-stripe"></div>
+    <div class="card-head">
+      <span class="time-badge">23:00</span>
+      <div class="check-circle">
+        <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
+          <polyline points="1,4.5 4,7.5 10,1" stroke="#080a0d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+    <div class="card-body">
+      <span class="meal-icon">🌙</span>
+      <div class="meal-title">Ceia Proteica</div>
+      <div class="macro-row">
+        <div class="macro-pill kcal">600 <span>kcal</span></div>
+        <div class="macro-pill prot">34g <span>prot</span></div>
+        <div class="macro-pill carb">84g <span>carb</span></div>
+        <div class="macro-pill fat">10g <span>gord</span></div>
+      </div>
+      <ul class="ingredients-list">
+        <li>200g Arroz cozido (com cúrcuma)</li>
+        <li>150g Frango em cubos (com shoyu)</li>
+        <li>Cenoura ralada (opcional)</li>
+      </ul>
+      <div class="instruction-box">
+        <div class="ins-label">Preparo</div>
+        <p>Use o frango e o arroz já preparados do almoço (batch cooking). Só reaqueça em 2 minutos.</p>
+      </div>
+      <div class="tip"><span class="tip-icon">💡</span>Cozinhar o dobro no almoço economiza tempo e mantém a dieta na hora do cansaço noturno.</div>
     </div>
   </div>
 
@@ -614,12 +778,13 @@ h1 .highlight { color: var(--acid); }
 <div class="congrats-bar" id="congrats">✦ PROTOCOLO COMPLETO — Bom trabalho hoje. ✦</div>
 <div class="reset-row"><button class="reset-btn" onclick="resetAll()">↺ Resetar dia</button></div>
 
+<!-- SHOPPING -->
 <div style="margin-top: 56px;">
   <div class="section-label">Lista de compras semanal</div>
   <div class="shopping-section">
     <div class="shop-header">
       <div class="shop-title">Compras da Semana</div>
-      <div class="price-badge">Estimativa: R$ 115 – 145</div>
+      <div class="price-badge">Estimativa: R$ 130 – 165</div>
     </div>
     <div class="table-scroll">
       <table class="shop-table">
@@ -639,10 +804,10 @@ h1 .highlight { color: var(--acid); }
             <td>Compre a cartela fechada; a dúzia avulsa sai 40% mais caro.</td>
           </tr>
           <tr>
-            <td>Peito de frango</td>
-            <td>2,5 kg (filé/sassami)</td>
-            <td>R$ 45 – 55</td>
-            <td>Pacotes congelados de 3 kg costumam ter o melhor preço/kg.</td>
+            <td>Peito de frango IQF</td>
+            <td>3 kg (pacote congelado)</td>
+            <td>R$ 48 – 55</td>
+            <td>Pacote Aurora 3 kg congelado é melhor custo-benefício da categoria.</td>
           </tr>
           <tr>
             <td>Arroz branco/integral</td>
@@ -654,7 +819,7 @@ h1 .highlight { color: var(--acid); }
             <td>Aveia em flocos</td>
             <td>1 pacote (500g)</td>
             <td>R$ 7 – 10</td>
-            <td>Procure a granel em zonas cerealistas; custa metade do preço.</td>
+            <td>Procure a granel em cerealistas; custa metade do preço.</td>
           </tr>
           <tr>
             <td>Bananas (prata/nanica)</td>
@@ -664,16 +829,28 @@ h1 .highlight { color: var(--acid); }
           </tr>
           <tr>
             <td>Pão de forma integral</td>
-            <td>1 pacote</td>
-            <td>R$ 8 – 11</td>
+            <td>2 pacotes</td>
+            <td>R$ 16 – 22</td>
             <td>Marcas próprias do supermercado (Qualitá, Taeq) são ótimas.</td>
+          </tr>
+          <tr>
+            <td>Pasta de amendoim</td>
+            <td>1 pote (500g)</td>
+            <td>R$ 18 – 26</td>
+            <td>Versão sem adição de açúcar; dura ~3 semanas no café da manhã.</td>
+          </tr>
+          <tr>
+            <td>Queijo muçarela</td>
+            <td>200g</td>
+            <td>R$ 8 – 12</td>
+            <td>Compre em fatias embaladas para evitar desperdício.</td>
           </tr>
         </tbody>
       </table>
     </div>
     <div class="alert-row">
       <span class="alert-icon">⚠️</span>
-      <p>Se o kg do frango passar de R$ 25,00 ou a cartela de ovos de R$ 26,00, você está pagando caro. Procure um Atacadão.</p>
+      <p>Se o kg do frango passar de R$ 25,00 ou a cartela de ovos de R$ 26,00, você está pagando caro. Procure um Atacadão ou Economart em LEM.</p>
     </div>
   </div>
 </div>
@@ -681,7 +858,7 @@ h1 .highlight { color: var(--acid); }
 </div>
 
 <script>
-const TOTAL = 4;
+const TOTAL = 5;
 const START = new Date(2025, 2, 23);
 const TOTAL_WEEKS = 12;
 const DAYS_PT = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
@@ -702,7 +879,7 @@ function isWeekComplete(w) {
   const ws=new Date(START.getTime()+w*7*86400000);
   for(let i=0;i<7;i++){
     const d=new Date(ws.getTime()+i*86400000);
-    if(getDayDone(d).length<4) return false;
+    if(getDayDone(d).length<TOTAL) return false;
   }
   return true;
 }
