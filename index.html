@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Protocolo Definição | 2.200 kcal</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --acid: #d4ff00;
+  --acid-dim: rgba(212,255,0,0.08);
+  --acid-mid: rgba(212,255,0,0.18);
+  --bg: #080a0d;
+  --surface: #101318;
+  --surface2: #161b22;
+  --border: #1e2530;
+  --border-bright: #2d3a4a;
+  --text: #e8edf4;
+  --muted: #5a6a7a;
+  --gold: #f5c842;
+  --red: #ff4d5a;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* GRID NOISE BG */
+body::before {
+  content:'';
+  position:fixed; inset:0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 59px, var(--border) 59px, var(--border) 60px),
+    repeating-linear-gradient(90deg, transparent, transparent 59px, var(--border) 59px, var(--border) 60px);
+  opacity:0.35;
+  pointer-events:none;
+  z-index:0;
+}
+
+.page { position:relative; z-index:1; max-width:1160px; margin:0 auto; padding:40px 24px 80px; }
+
+/* HEADER */
+header {
+  padding: 60px 0 50px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 48px;
+  position:relative;
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.logo-area {}
+
+.eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--acid);
+  margin-bottom: 12px;
+  opacity: 0.85;
+}
+
+h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(4rem, 10vw, 8rem);
+  line-height: 0.9;
+  letter-spacing: 0.02em;
+  color: var(--text);
+}
+
+h1 .highlight { color: var(--acid); }
+
+.header-stats {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  padding-top: 8px;
+}
+
+.stat-pill {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  padding: 5px 14px;
+  border-radius: 4px;
+  background: var(--surface2);
+  border: 1px solid var(--border-bright);
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.stat-pill strong { color: var(--acid); font-weight: 500; }
+
+/* PROGRESS BAR */
+.progress-section {
+  margin-bottom: 52px;
+}
+
+.prog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.prog-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.prog-count {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--acid);
+}
+
+.prog-track {
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.prog-fill {
+  height: 100%;
+  background: var(--acid);
+  border-radius: 2px;
+  transition: width 0.6s cubic-bezier(0.16,1,0.3,1);
+  width: 0%;
+  box-shadow: 0 0 12px rgba(212,255,0,0.6);
+}
+
+/* MEAL GRID */
+.meals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+/* MEAL CARD */
+.meal-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.2s;
+  position: relative;
+  user-select: none;
+}
+
+.meal-card:hover { border-color: var(--border-bright); transform: translateY(-2px); }
+.meal-card.done { opacity: 0.42; }
+.meal-card.done .card-body { text-decoration: none; }
+
+.card-stripe {
+  height: 3px;
+  background: var(--border);
+  transition: background 0.3s;
+}
+
+.meal-card:not(.done) .card-stripe { background: var(--acid); }
+
+.card-head {
+  padding: 16px 20px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.time-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  text-transform: uppercase;
+  padding-top: 2px;
+}
+
+.check-circle {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-bright);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.meal-card.done .check-circle {
+  background: var(--acid);
+  border-color: var(--acid);
+}
+
+.check-circle svg { display: none; }
+.meal-card.done .check-circle svg { display: block; }
+
+.card-body { padding: 0 20px 20px; }
+
+.meal-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+  display: block;
+  line-height: 1;
+}
+
+.meal-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.6rem;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  margin-bottom: 10px;
+  line-height: 1;
+}
+
+.meal-card.done .meal-title { color: var(--muted); }
+
+.ingredients-list {
+  list-style: none;
+  margin-bottom: 14px;
+}
+
+.ingredients-list li {
+  font-size: 13px;
+  color: var(--muted);
+  padding: 3px 0;
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  line-height: 1.4;
+}
+
+.ingredients-list li::before {
+  content: '─';
+  color: var(--acid);
+  font-size: 10px;
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+.instruction-box {
+  background: var(--surface2);
+  border-left: 2px solid var(--acid-mid);
+  padding: 10px 14px;
+  border-radius: 0 6px 6px 0;
+  margin-bottom: 12px;
+}
+
+.instruction-box .ins-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.instruction-box p {
+  font-size: 12.5px;
+  color: var(--text);
+  opacity: 0.75;
+  line-height: 1.5;
+}
+
+.tip {
+  font-size: 12px;
+  color: var(--gold);
+  opacity: 0.9;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  line-height: 1.4;
+}
+
+.tip-icon { flex-shrink: 0; font-size: 13px; }
+
+/* SECTION LABEL */
+.section-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-label::after {
+  content:'';
+  flex:1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* SHOPPING TABLE */
+.shopping-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 12px;
+}
+
+.shop-header {
+  padding: 20px 24px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.shop-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem;
+  letter-spacing: 0.06em;
+  color: var(--acid);
+}
+
+.price-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  padding: 4px 12px;
+  background: var(--acid-dim);
+  border: 1px solid rgba(212,255,0,0.25);
+  border-radius: 4px;
+  color: var(--acid);
+}
+
+.shop-table { width:100%; border-collapse:collapse; }
+
+.shop-table thead th {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: left;
+  padding: 12px 24px;
+  border-bottom: 1px solid var(--border);
+  font-weight: 400;
+}
+
+.shop-table tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+.shop-table tbody tr:last-child { border-bottom: none; }
+.shop-table tbody tr:hover { background: var(--surface2); }
+
+.shop-table td {
+  padding: 14px 24px;
+  font-size: 13.5px;
+  vertical-align: middle;
+  line-height: 1.4;
+}
+
+.shop-table td:first-child { font-weight: 500; color: var(--text); }
+.shop-table td:nth-child(2) {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--muted);
+}
+.shop-table td:nth-child(3) {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--acid);
+  white-space: nowrap;
+}
+.shop-table td:last-child { font-size: 12.5px; color: var(--muted); }
+
+.alert-row {
+  padding: 14px 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: rgba(255,77,90,0.06);
+}
+
+.alert-row p {
+  font-size: 12.5px;
+  color: var(--red);
+  line-height: 1.5;
+}
+
+.alert-icon { font-size: 14px; flex-shrink:0; padding-top: 1px; }
+
+/* CONGRATS */
+.congrats-bar {
+  text-align: center;
+  padding: 16px;
+  background: var(--acid-dim);
+  border: 1px solid rgba(212,255,0,0.2);
+  border-radius: 8px;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--acid);
+  margin-top: 16px;
+  display: none;
+}
+
+/* RESET */
+.reset-row { margin-top: 24px; text-align: right; }
+.reset-btn {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: transparent;
+  border: 1px solid var(--border-bright);
+  color: var(--muted);
+  padding: 7px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.reset-btn:hover { border-color: var(--red); color: var(--red); }
+
+/* overflow for table */
+.table-scroll { overflow-x: auto; }
+
+/* ANIMATIONS */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(16px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+.meal-card { animation: fadeUp 0.4s ease both; }
+.meal-card:nth-child(1) { animation-delay: 0.05s; }
+.meal-card:nth-child(2) { animation-delay: 0.12s; }
+.meal-card:nth-child(3) { animation-delay: 0.19s; }
+.meal-card:nth-child(4) { animation-delay: 0.26s; }
+
+</style>
+</head>
+<body>
+<div class="page">
+
+<header>
+  <div class="header-top">
+    <div class="logo-area">
+      <p class="eyebrow">Protocolo de Definição · 2025</p>
+      <h1>DEFINIÇÃO<br><span class="highlight">2.200 KCAL</span></h1>
+    </div>
+    <div class="header-stats">
+      <div class="stat-pill">Gasto estimado <strong>2.700 kcal</strong></div>
+      <div class="stat-pill">Déficit <strong>−500 kcal/dia</strong></div>
+      <div class="stat-pill">Foco <strong>Preservação muscular</strong></div>
+    </div>
+  </div>
+</header>
+
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:36px;">
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;">
+    <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Semana atual</div>
+    <div id="stat-week" style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--acid);line-height:1;">—</div>
+    <div id="stat-week-range" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-top:4px;">—</div>
+  </div>
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;">
+    <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Semanas completas</div>
+    <div id="stat-done-weeks" style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--text);line-height:1;">0</div>
+    <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-top:4px;">de 12 planejadas</div>
+  </div>
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;">
+    <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Hoje</div>
+    <div id="stat-day" style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--text);line-height:1;">—</div>
+    <div id="stat-date" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-top:4px;">—</div>
+  </div>
+</div>
+
+<div class="section-label">Progresso — 12 semanas</div>
+<div id="weeks-grid" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:36px;"></div>
+
+<div id="day-row" style="display:flex;gap:4px;margin-bottom:28px;"></div>
+
+<div class="progress-section">
+  <div class="prog-header">
+    <span class="prog-label">Refeições do dia</span>
+    <span class="prog-count" id="prog-count">0 / 4</span>
+  </div>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
+</div>
+
+<div class="section-label">Refeições</div>
+
+<div class="meals-grid" id="meals-grid">
+
+  <div class="meal-card" id="card-1" onclick="toggle(1)">
+    <div class="card-stripe"></div>
+    <div class="card-head">
+      <span class="time-badge">08:00</span>
+      <div class="check-circle">
+        <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
+          <polyline points="1,4.5 4,7.5 10,1" stroke="#080a0d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+    <div class="card-body">
+      <span class="meal-icon">🥞</span>
+      <div class="meal-title">Panqueca de Hotel</div>
+      <ul class="ingredients-list">
+        <li>3 Ovos inteiros</li>
+        <li>4 col. (sopa) de Aveia</li>
+        <li>1 Banana amassada</li>
+        <li>Canela em pó a gosto</li>
+      </ul>
+      <div class="instruction-box">
+        <div class="ins-label">Preparo</div>
+        <p>Bata tudo com um garfo e jogue na frigideira em fogo baixo. Doure os dois lados.</p>
+      </div>
+      <div class="tip"><span class="tip-icon">💡</span>1 colher de doce de leite por cima muda o jogo!</div>
+    </div>
+  </div>
+
+  <div class="meal-card" id="card-2" onclick="toggle(2)">
+    <div class="card-stripe"></div>
+    <div class="card-head">
+      <span class="time-badge">12:00 & 23:00</span>
+      <div class="check-circle">
+        <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
+          <polyline points="1,4.5 4,7.5 10,1" stroke="#080a0d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+    <div class="card-body">
+      <span class="meal-icon">🍲</span>
+      <div class="meal-title">Arroz & Frango</div>
+      <ul class="ingredients-list">
+        <li>200g Arroz cozido (com cúrcuma)</li>
+        <li>150g Frango em cubos (com shoyu)</li>
+        <li>Cenoura ralada (opcional)</li>
+      </ul>
+      <div class="instruction-box">
+        <div class="ins-label">Preparo</div>
+        <p>Sele o frango em fogo alto para ficar suculento. Use cúrcuma no arroz para dar cor.</p>
+      </div>
+      <div class="tip"><span class="tip-icon">💡</span>Finalize com cebolinha picada congelada.</div>
+    </div>
+  </div>
+
+  <div class="meal-card" id="card-3" onclick="toggle(3)">
+    <div class="card-stripe"></div>
+    <div class="card-head">
+      <span class="time-badge">15:30</span>
+      <div class="check-circle">
+        <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
+          <polyline points="1,4.5 4,7.5 10,1" stroke="#080a0d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+    <div class="card-body">
+      <span class="meal-icon">🥪</span>
+      <div class="meal-title">Sanduíche Cremoso</div>
+      <ul class="ingredients-list">
+        <li>2 fatias de Pão integral</li>
+        <li>100g Frango desfiado</li>
+        <li>1 col. de Requeijão ou caldo do cozimento</li>
+      </ul>
+      <div class="instruction-box">
+        <div class="ins-label">Preparo</div>
+        <p>Misture o frango com o requeijão e temperos (orégano/páprica). Recheie o pão.</p>
+      </div>
+      <div class="tip"><span class="tip-icon">💡</span>Toste na sanduicheira para ficar crocante!</div>
+    </div>
+  </div>
+
+  <div class="meal-card" id="card-4" onclick="toggle(4)">
+    <div class="card-stripe"></div>
+    <div class="card-head">
+      <span class="time-badge">19:30</span>
+      <div class="check-circle">
+        <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
+          <polyline points="1,4.5 4,7.5 10,1" stroke="#080a0d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+    <div class="card-body">
+      <span class="meal-icon">🍳</span>
+      <div class="meal-title">Omelete de Pizza</div>
+      <ul class="ingredients-list">
+        <li>2 Ovos inteiros</li>
+        <li>1 fatia de Queijo muçarela</li>
+        <li>Orégano à vontade</li>
+        <li>1 Banana ou Maçã</li>
+      </ul>
+      <div class="instruction-box">
+        <div class="ins-label">Preparo</div>
+        <p>Bata os ovos, jogue na frigideira e finalize com queijo e muito orégano.</p>
+      </div>
+      <div class="tip"><span class="tip-icon">💡</span>O cheiro do orégano ajuda a não furar a dieta.</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="congrats-bar" id="congrats">✦ PROTOCOLO COMPLETO — Bom trabalho hoje. ✦</div>
+<div class="reset-row"><button class="reset-btn" onclick="resetAll()">↺ Resetar dia</button></div>
+
+<div style="margin-top: 56px;">
+  <div class="section-label">Lista de compras semanal</div>
+  <div class="shopping-section">
+    <div class="shop-header">
+      <div class="shop-title">Compras da Semana</div>
+      <div class="price-badge">Estimativa: R$ 115 – 145</div>
+    </div>
+    <div class="table-scroll">
+      <table class="shop-table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Quantidade</th>
+            <th>Preço médio</th>
+            <th>Dica de economia</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Ovos brancos</td>
+            <td>1 cartela (30 unid.)</td>
+            <td>R$ 18 – 22</td>
+            <td>Compre a cartela fechada; a dúzia avulsa sai 40% mais caro.</td>
+          </tr>
+          <tr>
+            <td>Peito de frango</td>
+            <td>2,5 kg (filé/sassami)</td>
+            <td>R$ 45 – 55</td>
+            <td>Pacotes congelados de 3 kg costumam ter o melhor preço/kg.</td>
+          </tr>
+          <tr>
+            <td>Arroz branco/integral</td>
+            <td>1 kg (consumo real)</td>
+            <td>R$ 6 – 8</td>
+            <td>Compre o fardo de 5 kg para o mês todo.</td>
+          </tr>
+          <tr>
+            <td>Aveia em flocos</td>
+            <td>1 pacote (500g)</td>
+            <td>R$ 7 – 10</td>
+            <td>Procure a granel em zonas cerealistas; custa metade do preço.</td>
+          </tr>
+          <tr>
+            <td>Bananas (prata/nanica)</td>
+            <td>2 dúzias</td>
+            <td>R$ 12 – 16</td>
+            <td>Compre em feiras de rua no final da manhã ("hora da xepa").</td>
+          </tr>
+          <tr>
+            <td>Pão de forma integral</td>
+            <td>1 pacote</td>
+            <td>R$ 8 – 11</td>
+            <td>Marcas próprias do supermercado (Qualitá, Taeq) são ótimas.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="alert-row">
+      <span class="alert-icon">⚠️</span>
+      <p>Se o kg do frango passar de R$ 25,00 ou a cartela de ovos de R$ 26,00, você está pagando caro. Procure um Atacadão.</p>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+const TOTAL = 4;
+const START = new Date(2025, 2, 23);
+const TOTAL_WEEKS = 12;
+const DAYS_PT = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+const DAYS_FULL = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+const MONTHS_PT = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+
+function today() { const n=new Date(); return new Date(n.getFullYear(),n.getMonth(),n.getDate()); }
+function dayKey(d) { return 'proto_'+d.getFullYear()+'_'+(d.getMonth()+1)+'_'+d.getDate(); }
+function fmtDate(d) { return d.getDate()+' '+MONTHS_PT[d.getMonth()]; }
+function diffDays(a,b) { return Math.floor((b-a)/86400000); }
+
+function getDayDone(d) { try{return JSON.parse(localStorage.getItem(dayKey(d)))||[];}catch{return[];} }
+function setDayDone(d,arr) { try{localStorage.setItem(dayKey(d),JSON.stringify(arr));}catch{} }
+
+function weeksElapsed(t) { const d=diffDays(START,t); return d<0?-1:Math.floor(d/7); }
+
+function isWeekComplete(w) {
+  const ws=new Date(START.getTime()+w*7*86400000);
+  for(let i=0;i<7;i++){
+    const d=new Date(ws.getTime()+i*86400000);
+    if(getDayDone(d).length<4) return false;
+  }
+  return true;
+}
+
+function toggle(id) {
+  const t=today(); let done=getDayDone(t);
+  done=done.includes(id)?done.filter(i=>i!==id):[...done,id];
+  setDayDone(t,done); render();
+}
+
+function resetAll() { setDayDone(today(),[]); render(); }
+
+function render() {
+  const t=today();
+  const weekIdx=weeksElapsed(t);
+  const done=getDayDone(t);
+
+  document.getElementById('stat-day').textContent=DAYS_FULL[t.getDay()];
+  document.getElementById('stat-date').textContent=fmtDate(t)+' '+t.getFullYear();
+
+  if(weekIdx>=0&&weekIdx<TOTAL_WEEKS){
+    document.getElementById('stat-week').textContent='Semana '+(weekIdx+1);
+    const ws=new Date(START.getTime()+weekIdx*7*86400000);
+    const we=new Date(ws.getTime()+6*86400000);
+    document.getElementById('stat-week-range').textContent=fmtDate(ws)+' – '+fmtDate(we);
+  } else if(weekIdx<0){
+    document.getElementById('stat-week').textContent='Em breve';
+    document.getElementById('stat-week-range').textContent='Início '+fmtDate(START);
+  } else {
+    document.getElementById('stat-week').textContent='Completo';
+    document.getElementById('stat-week-range').textContent='12 semanas';
+  }
+
+  let doneWeeks=0;
+  const wg=document.getElementById('weeks-grid');
+  wg.innerHTML='';
+  for(let w=0;w<TOTAL_WEEKS;w++){
+    const complete=isWeekComplete(w);
+    if(complete) doneWeeks++;
+    const dot=document.createElement('div');
+    const isCur=w===weekIdx, isFut=w>weekIdx;
+    dot.style.cssText='width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:"DM Mono",monospace;font-size:11px;cursor:default;border:1px solid;'
+      +(complete?'background:rgba(212,255,0,0.12);border-color:rgba(212,255,0,0.4);color:#d4ff00;'
+        :isCur?'background:var(--surface2);border-color:#2d3a4a;color:#e8edf4;font-weight:600;'
+        :isFut?'background:transparent;border-color:#1e2530;color:#2d3a4a;'
+        :'background:transparent;border-color:#2d3a4a;color:#5a6a7a;');
+    dot.textContent=w+1;
+    wg.appendChild(dot);
+  }
+  document.getElementById('stat-done-weeks').textContent=doneWeeks;
+
+  const dr=document.getElementById('day-row');
+  dr.innerHTML='';
+  if(weekIdx>=0&&weekIdx<TOTAL_WEEKS){
+    const ws=new Date(START.getTime()+weekIdx*7*86400000);
+    for(let i=0;i<7;i++){
+      const d=new Date(ws.getTime()+i*86400000);
+      const isToday=d.getTime()===t.getTime();
+      const isPast=d<t;
+      const chip=document.createElement('div');
+      chip.style.cssText='flex:1;padding:6px 4px;border-radius:6px;text-align:center;font-family:"DM Mono",monospace;font-size:11px;border:1px solid;'
+        +(isToday?'background:rgba(212,255,0,0.1);border-color:rgba(212,255,0,0.4);color:#d4ff00;font-weight:600;'
+          :isPast?'border-color:#1e2530;color:#2d3a4a;'
+          :'border-color:#1e2530;color:#5a6a7a;');
+      chip.textContent=DAYS_PT[d.getDay()];
+      dr.appendChild(chip);
+    }
+  }
+
+  for(let i=1;i<=TOTAL;i++){
+    const card=document.getElementById('card-'+i);
+    if(done.includes(i)) card.classList.add('done');
+    else card.classList.remove('done');
+  }
+  const pct=Math.round((done.length/TOTAL)*100);
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-count').textContent=done.length+' / '+TOTAL;
+  document.getElementById('congrats').style.display=done.length===TOTAL?'block':'none';
+}
+
+render();
+</script>
+</body>
+</html>
